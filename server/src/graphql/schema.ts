@@ -17,13 +17,17 @@ const TicketType = new GraphQLObjectType({
   description: "A type definition for a single Ticket",
   fields: () => ({
     id: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLID),
       description: "This is a Mongoosse Object ID of the ticket",
     },
     user: {
-      type: new GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLID),
       description:
         "This is a Mongoosse Object ID of a user that created the ticket",
+    },
+    category: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "This is a category of the ticket",
     },
     description: {
       type: new GraphQLNonNull(GraphQLString),
@@ -55,6 +59,13 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLBoolean),
       description: "This is the admin status of a user",
     },
+    tickets: {
+      type: new GraphQLList(TicketType),
+      description: "This is a list of tickets associated with a user",
+      resolve: (parent) => {
+        return Ticket.find({user: parent.id})
+      }
+    }
   }),
 });
 
@@ -76,8 +87,45 @@ const RootQueryType = new GraphQLObjectType({
     tickets: {
       type: new GraphQLList(TicketType),
       description: "This is a list of the tickets",
-      resolve: async () => {
-        return await Ticket.find({});
+      resolve: async (parent, _, { user }) => {
+        try {
+          if (!user?.id) throw new Error("You are not Authorized");
+          const tickets = await Ticket.find({ user: user.id });
+          return tickets;
+        } catch (error) {
+          let errorMessage = "Error getting tickets";
+          if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          console.log(errorMessage);
+          throw new Error(errorMessage);
+        }
+      },
+    },
+    ticket: {
+      type: TicketType,
+      description: "This is a single ticket",
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (_, { id }, { user }) => {
+        try {
+          if (!user?.id) throw new Error("UnAuthorized Access");
+          const ticket = await Ticket.findById(id);
+          if (!ticket) throw new Error("Ticket not Found");
+          if (ticket.user.toString() !== user.id)
+            throw new Error("You are not Authorized");
+          return ticket;
+        } catch (error) {
+          let errorMessage = "Cannot find user";
+          if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          console.log(errorMessage);
+          throw new Error(errorMessage);
+        }
       },
     },
     users: {
@@ -85,12 +133,11 @@ const RootQueryType = new GraphQLObjectType({
       description: "This is a list of all users",
       resolve: async (parent, _, { user }) => {
         try {
-          if (!user?.id) throw new Error("You must be Authenticated");
-
+          if (!user?.id) throw new Error("You are not Authorized");
           const dbUser = await User.findById(user.id);
-          if (dbUser?.isAdmin !== true)
+          if (dbUser?.isAdmin !== true) {
             throw new Error("You must be an Admin to perform this task");
-          // return {id: dbUser?.id,name: dbUser?.name, email: dbUser?.email, isAdmin: dbUser?.isAdmin}
+          }
           return await User.find({}).select("-password");
         } catch (error) {
           let errorMessage = "Error getting users";
@@ -112,11 +159,10 @@ const RootQueryType = new GraphQLObjectType({
       },
       resolve: async (_, { id }, { user }) => {
         try {
-          console.log(user);
-          if (!user?.id) throw new Error("You must be Authenticated");
+          if (!user?.id) throw new Error("UnAuthorized Access");
           if (user?.id !== id) throw new Error("You are not Authorized");
           const dbUser = await User.findById(user.id).select("-password");
-          // return {id: dbUser?.id,name: dbUser?.name, email: dbUser?.email, isAdmin: dbUser?.isAdmin}
+          if (!dbUser) throw new Error("User not Found");
           return dbUser;
         } catch (error) {
           let errorMessage = "Cannot find user";
@@ -138,27 +184,130 @@ const RootMutationType = new GraphQLObjectType({
   name: "Mutation",
   description: "This is the entyrypoinnt to the mutation",
   fields: () => ({
-    // addTicket: {
-    //   type: TicketType,
-    //   description: "This is a mutation to add a ticket",
-    //   args: {
+    addTicket: {
+      type: TicketType,
+      description: "This is a mutation to add a ticket",
+      args: {
+        description: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: "This is the description of the ticket",
+        },
+        category: {
+          type: new GraphQLNonNull(GraphQLString),
+          description: "This is the category of the ticket",
+        },
+      },
+      resolve: async (_, { description, category }, { user }) => {
+        try {
+          if (!user) throw new Error("Not Authorized");
+          const dbUser = await User.findById(user.id);
+          if (!dbUser) throw new Error("Not Authorized");
+          if (!description || !category)
+            throw new Error("Description is required");
+          const newTicket = await Ticket.create({
+            user: dbUser.id,
+            description,
+            category,
+            status: "new",
+          });
+          return newTicket;
+        } catch (error) {
+          let errorMessage = "Error creating a new ticket";
+          if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          console.log(errorMessage);
+          throw new Error(errorMessage);
+        }
+      },
+    },
+    deleteTicket: {
+      type: GraphQLString,
+      description: "This is a mutation to delete ticket",
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+      },
+      resolve: async (_, { id }, { user }) => {
+        try {
+          if (!user?.id) throw new Error("UnAuthorized Access");
+          const dbUser = await User.findById(user.id);
+          if (!dbUser) throw new Error("Not Authorized");
+          const ticket = await Ticket.findById(id);
+          if (!ticket) throw new Error("Ticket not Found");
+          if (ticket.user.toString() !== user.id) {
+            throw new Error("You are not Authorized");
+          }
+          await ticket.remove();
+          return "Ticket deleted Successfully";
+        } catch (error) {
+          let errorMessage = "Error deleting user";
+          if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          console.log(errorMessage);
+          throw new Error(errorMessage);
+        }
+      },
+    },
+    updateTicket: {
+      type: TicketType,
+      description: "This is a mutation to update ticket",
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+        description: {
+          type: GraphQLString,
+          description: "This is the description of the ticket to be updated",
+        },
+        category: {
+          type: GraphQLString,
+          description: "This is the category of the ticket to be updated",
+        },
+      },
+      resolve: async (_, { id, description, category }, { user }) => {
+        try {
+          if (!user?.id) throw new Error("UnAuthorized Access");
+          const dbUser = await User.findById(user.id);
+          if (!dbUser) throw new Error("Not Authorized");
+          const ticket = await Ticket.findById(id);
+          if (!ticket) throw new Error("Ticket not Found");
+          if (ticket.user.toString() !== user.id) {
+            throw new Error("You are not Authorized");
+          }
 
-    //   }
-    // }
+          const updatedTicket = await Ticket.findByIdAndUpdate(
+            id,
+            { description, category },
+            { new: true }
+          );
+          return updatedTicket;
+        } catch (error) {
+          let errorMessage = "Error deleting user";
+          if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          console.log(errorMessage);
+          throw new Error(errorMessage);
+        }
+      },
+    },
     addUser: {
       type: AuthUserType,
       description: "This is the mutation to add a user to the DB",
       args: {
         name: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "Name of the user",
         },
         email: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "Email of the user",
         },
         password: {
-          type: GraphQLString,
+          type: new GraphQLNonNull(GraphQLString),
           description: "Password of the user",
         },
       },

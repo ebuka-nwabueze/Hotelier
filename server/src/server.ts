@@ -9,7 +9,7 @@ import Auth from "./services/authService";
 
 
 const app: express.Application = express()
-const PORT: number = 8000
+const PORT: number = 8008
 
 connectDB()
 
