@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "../app/hooks";
-import { login } from "../features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import Spinner from "../components/Spinner";
+import { login, reset, selectAuth } from "../features/auth/authSlice";
+import {useNavigate} from "react-router-dom"
 
 export interface FormData {
   email: string;
@@ -14,8 +16,20 @@ function Login() {
     password: "",
   });
   const { email, password } = formData;
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  
+  const {user,isError,isSuccess,isLoading,message} = useAppSelector(selectAuth)
 
+  useEffect(() => {
+    if(isError){
+      toast.error(message)
+    }
+    if(isSuccess || user){
+      navigate("/")
+    }
+    dispatch(reset());
+  }, [isError, isSuccess,message, user, dispatch])
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setformData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -26,6 +40,7 @@ function Login() {
     const usersData = { email, password };
     dispatch(login(usersData));
   }
+  if (isLoading) return <Spinner/>
 
   return (
     <div className="form-content">
