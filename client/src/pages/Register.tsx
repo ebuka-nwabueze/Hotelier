@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useAppDispatch } from "../app/hooks";
-import { register } from "../features/auth/authSlice";
+import {useNavigate} from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { register, reset, selectAuth } from "../features/auth/authSlice";
+import Spinner from "../components/Spinner";
 
 export interface FormData {
   name: string;
   email: string;
-  password: string;
+  password: string; 
   password2: string
 }
 
@@ -18,8 +20,20 @@ function Register() {
     password2: ""
   });
   const { name, email, password, password2 } = formData;
+  const {user,isError,isSuccess,isLoading,message} = useAppSelector(selectAuth)
 
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if(isError){
+      toast.error(message)
+    }
+    if(isSuccess || user){
+      navigate("/")
+    }
+    dispatch(reset());
+  }, [isError, isSuccess,message, user, dispatch])
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setformData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -31,10 +45,11 @@ function Register() {
       toast.error("Passwords do not match");
     } else {
       const usersData = { name, email, password };
-      console.log(usersData)
       dispatch(register(usersData));
     }
   }
+
+  if(isLoading) return <Spinner/>
 
   return (
     <div className="form-content">

@@ -17,12 +17,12 @@ export interface AuthState {
   isLoading: boolean;
   message: any;
 }
-// const localUser = localStorage.getItem("user") === null ? null :localStorage.getItem("user") 
+// const localUser = localStorage.getItem("user") === null ? null :localStorage.getItem("user")
 // // console.log(localUser)
 // const user = JSON.parse(localUser || "");
-console.log("localUser",localStorage.getItem("user") === null)
-const localUser = localStorage.getItem("user") 
-console.log("localUser2", localUser)
+console.log("localUser", localStorage.getItem("user") === null);
+const localUser = localStorage.getItem("user");
+console.log("localUser2", localUser);
 // @ts-ignore
 const user = JSON.parse(localUser);
 // console.log("user",user)
@@ -48,6 +48,8 @@ export const register = createAsyncThunk(
       let message = "";
       if (axios.isAxiosError(error)) {
         console.log("error message: ", error.message);
+        message = error.message;
+      } else if (error instanceof Error) {
         message = error.message;
       } else {
         console.log("unexpected error: ", error);
@@ -81,7 +83,7 @@ export const login = createAsyncThunk(
 
 // Logout user
 export const logout = createAsyncThunk("auth/logout", async () => {
-   authLogout()
+  authLogout();
 });
 
 const authSlice = createSlice({
@@ -89,7 +91,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.isLoading = false; 
+      state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
@@ -130,8 +132,8 @@ const authSlice = createSlice({
         state.user = null;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.user = null
-      })
+        state.user = null;
+      });
   },
 });
 

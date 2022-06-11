@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL = "/graphql";
 
-//Types and interface will be refactored into its own file
+//Types and interface will be refactored into its own file 
 
 export interface UserLoginData {
   email: string;
@@ -24,9 +24,9 @@ export interface UserRegisterResponse {
   data: {
     addUser: UserResponseData
   }
-  errors: {
-    message: string
-  }
+  errors: [
+    {message: string}
+  ]
 }
 
 export interface UserLoginResponse {
@@ -61,8 +61,12 @@ export const authRegister = async (userData: UserRegisterData) => {
 
 
   const response = await axios.post<UserRegisterResponse>(API_URL, graphqlQuery);
-  if (response.data.data.addUser) {
+  console.log(response)
+  const condition1 = response.data.data.addUser !== null
+  if (condition1) {
     localStorage.setItem("user", JSON.stringify(response.data.data.addUser));
+  } else if(!condition1){
+    throw new Error(response.data.errors[0].message)
   }
   return response.data.data.addUser;
 };
