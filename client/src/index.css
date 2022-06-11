@@ -4,6 +4,7 @@
   --bg-color-ash: #ebeced;
   --app-gray-01: #38454d;
   --bg-btn-01: #087cac;
+  --bg-btn-02: #429cc2;
 }
 
 * {
@@ -12,11 +13,30 @@
   box-sizing: border-box;
 }
 
+ul{
+  list-style: none;
+}
+
+ul li a{
+  text-decoration: none;
+  color: inherit;
+}
+
 h1,
 h2,
 h3 {
   font-weight: 600;
   margin-bottom: 10px;
+}
+
+.button{
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
 }
 
 body {
@@ -45,6 +65,30 @@ body {
   font-size: x-large;
 }
 
+.right-nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-nav-control{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.right-nav-control a{
+  width: 100%;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.right-nav-control a:hover , button:hover{
+  background-color: var(--bg-btn-02);
+  color: white;
+}
 
 
 .container {
@@ -157,7 +201,15 @@ body {
   .form-content{
     width: 70%;
   }
+  .right-nav-icon{
+    display: none;
+  }
+}
 
+@media(max-width:768px){
+  .right-nav-control{
+    display: none;
+  }
 }
 
 .spinnerContainer{
