@@ -2,6 +2,7 @@
 
 :root {
   --bg-color-ash: #ebeced;
+  --bg-color-ash-02: #dde4eb;
   --app-gray-01: #38454d;
   --bg-btn-01: #087cac;
   --bg-btn-02: #429cc2;
@@ -29,7 +30,7 @@ h3 {
   margin-bottom: 10px;
 }
 
-.button{
+button{
 	background: none;
 	color: inherit;
 	border: none;
@@ -78,7 +79,7 @@ body {
   gap: 20px;
 }
 
-.right-nav-control a{
+.right-nav-control a,.right-nav-control button {
   width: 100%;
   border-radius: 5px;
   padding: 5px;
@@ -147,16 +148,41 @@ body {
   font-weight: 700;
 }
 
-.form-group input {
+.form-group input, .form-group > select {
   width: 100%;
   outline: none;
   height: 40px;
   padding: 1px 8px;
-  /* border: none;  */
   border: solid 1px #ccc;
   border-radius: 5px;
   font: inherit;
 }
+
+.ticket-page{
+  background-color: white;
+  margin-top: 50px;
+  width: 80%;
+}
+
+.ticket-info > h2 {
+  text-align: center;
+}
+
+.ticket-info > h2 {
+  font-weight: bold;
+}
+
+.ticket-info > p  {
+  margin-bottom: 10px;
+}
+
+.ticket-desc{
+  /* background-color: var(--bg-color-ash-02); */
+  border-top: black solid 2px;
+  margin: 20px 0px;
+  padding-top: 15px;
+}
+
 
 .btn{
   /* width: 100%; */

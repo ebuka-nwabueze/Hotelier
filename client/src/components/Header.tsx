@@ -64,9 +64,14 @@ const Header = () => {
             </Link>
           </li>
           {user ? (
+            <>
             <li className="nav-text">
               <button onClick={onLogout}>Logout</button>
             </li>
+            <li className="nav-text">
+            <Link to="/new-ticket" onClick={showSideBar}>Create New Ticket</Link>
+            </li>
+            </>
           ) : (
             <>
               <li className="nav-text">
