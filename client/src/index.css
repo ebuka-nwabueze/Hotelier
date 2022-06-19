@@ -6,6 +6,8 @@
   --app-gray-01: #38454d;
   --bg-btn-01: #087cac;
   --bg-btn-02: #429cc2;
+  --app-green: green;
+  --app-red: red;
 }
 
 * {
@@ -164,7 +166,8 @@ body {
   width: 80%;
 }
 
-.ticket-info > h2 {
+
+.ticket-page > h2 {
   text-align: center;
 }
 
@@ -172,8 +175,32 @@ body {
   font-weight: bold;
 }
 
-.ticket-info > p  {
+.ticket-info > p {
   margin-bottom: 10px;
+  padding: 5px;
+}
+
+.ticket-status > p{
+  color: white;
+  display: inline-block;
+  border-radius: 10px;
+}
+
+.ticket-status {
+  text-align: right;
+}
+
+
+.ticket-status-text{
+  padding: 5px 15px ;
+}
+
+.ticket-new{
+  background-color: var(--app-green);
+}
+
+.ticket-closed{
+  background-color: var(--app-green);
 }
 
 .ticket-desc{
@@ -230,6 +257,16 @@ body {
   .right-nav-icon{
     display: none;
   }
+  .ticket-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ticket-status{
+    align-self: start;
+    order: 2;
+  }
+  
 }
 
 @media(max-width:768px){

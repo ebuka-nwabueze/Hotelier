@@ -17,10 +17,10 @@ function Ticket() {
   } = useAppSelector(selectTicket);
   const { ticketId } = useParams<{ ticketId: string }>();
 
-  let dateCreated = ""
-  if(ticket?.createdAt){
-    const newDate = ticket?.createdAt as string
-    dateCreated = new Date(parseInt(newDate)).toLocaleDateString()
+  let dateCreated = "";
+  if (ticket?.createdAt) {
+    const newDate = ticket?.createdAt as string;
+    dateCreated = new Date(parseInt(newDate)).toLocaleDateString();
   }
 
   useEffect(() => {
@@ -36,11 +36,18 @@ function Ticket() {
 
   return (
     <div className="ticket-page container">
-      <div className="ticket-info">
-        <h2>Ticket Details</h2>
-        <p> Ticket ID: {ticket?.id}</p>
-        <p>Category: {ticket?.category}</p>
-        <p>Date Submitted: {dateCreated}</p>
+      <h2>Ticket Details</h2>
+      <div className="ticket-top">
+        <div className="ticket-status">
+          <p className={`ticket-${ticket?.status}`}>
+            <span className="ticket-status-text">{ticket?.status}</span>
+          </p>
+        </div>
+        <div className="ticket-info">
+          <p> Ticket ID: {ticket?.id}</p>
+          <p>Category: {ticket?.category}</p>
+          <p>Date Submitted: {dateCreated}</p>
+        </div>
       </div>
       <div className="ticket-desc">
         <h3>Description of Issue</h3>
