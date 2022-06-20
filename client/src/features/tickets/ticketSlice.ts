@@ -12,14 +12,14 @@ interface Ticket {
   status: string
 }
 
-interface FullTicket extends Ticket {
+export interface FullTicket extends Ticket {
   createdAt: string;
   updatedAt: string
 }
 
 
 export interface TicketState {
-  tickets: Ticket[] | null;
+  tickets: FullTicket[] | null;
   ticket: FullTicket | null;
   isError: boolean;
   isSuccess: boolean;

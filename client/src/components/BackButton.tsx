@@ -8,7 +8,7 @@ type ButtonUrl = {
 
 function BackButton({url}: ButtonUrl) {
   return (
-    <Link to={url} className="btn-back">
+    <Link to={url} className="btn-back btn-main">
       <FaArrowAltCircleLeft /> Back
     </Link>
   )

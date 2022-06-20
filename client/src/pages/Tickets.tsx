@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
+import TicketItem from "../components/TicketItem";
 import { getTicket, getTickets, selectTicket } from "../features/tickets/ticketSlice";
 
 
@@ -37,11 +38,16 @@ function Tickets() {
           <div>Date</div>
           <div>Category</div>
           <div>Status</div>
-          <div>t</div>
+          <div></div>
         </div>
-        {/* { tickets.map((ticket) => (
-          // <TicketItem key={ticket._id} ticket={ticket} />
-        ))} */}
+        {
+          tickets ? 
+           tickets.map((ticket) => (
+            <TicketItem key={ticket.id} ticket={ticket} />
+          ))
+          : <>No Tickets Found</>
+        }
+
       </div>
     </div>
   )
