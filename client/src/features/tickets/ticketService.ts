@@ -38,6 +38,15 @@ export interface TicketResponse {
   ]
 }
 
+export interface TicketsResponse {
+  data: {
+    tickets:FullTicketResponseData[]
+  }
+  errors: [
+    {message: string}
+  ]
+}
+
 export const newTicket = async (ticketData: NewTicketData, token: string) => {
   const {description, category} = ticketData;
 
@@ -110,4 +119,39 @@ export const getSingleTicket = async (ticketId: string, token: string) => {
   }
 
   return response.data.data.ticket
+}
+
+export const getAllTickets = async (token: string) => {
+
+  const graphqlQuery = {
+    operationName: "tickets",
+    query: `query tickets{
+      tickets {
+        id
+        user
+        description
+        category
+        status
+        createdAt
+        updatedAt
+      }
+    }`
+  };
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  }
+  console.log("making axios getAllTicket request")
+  const response = await axios.post<TicketsResponse>(API_URL,graphqlQuery, config)
+  console.log(response)
+  const condition1 = response.data.data.tickets !== null
+  if(!condition1) {
+    const error = response.data.errors[0]
+    throw new Error(error.message)
+  }
+
+  return response.data.data.tickets
 }

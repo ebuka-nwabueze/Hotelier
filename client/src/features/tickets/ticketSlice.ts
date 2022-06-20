@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../../app/store";
-import { getSingleTicket, newTicket, NewTicketData } from "./ticketService";
+import { getAllTickets, getSingleTicket, newTicket, NewTicketData } from "./ticketService";
 import {UserResponseData} from "../auth/authService"
 
 interface Ticket {
@@ -90,6 +90,32 @@ export const getTicket = createAsyncThunk(
   }
 );
 
+// get single Ticket
+export const getTickets = createAsyncThunk(
+  "tickets/getTickets",
+  async (_,thunkAPI) => {
+    try {
+      // Get token from the user in auth state
+      const state = thunkAPI.getState() as RootState
+      const user = state.auth.user as UserResponseData
+      return await getAllTickets(user.token);
+    } catch (error) {
+      let message = "";
+      if (axios.isAxiosError(error)) {
+        console.log("error message axios: ", error.message);
+        message = error.message;
+      } else if (error instanceof Error) {
+        console.log("unexpected error of thrown: ", error.message);
+        message = error.message;
+      } else {
+        console.log("unexpected error: ", error);
+        message = "An unexpected error occurred";
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 
 const ticketSlice = createSlice({
   name: "ticket",
@@ -113,20 +139,20 @@ const ticketSlice = createSlice({
         state.isLoading = false;
         state.message = action.payload;
       })
-      // .addCase(getTickets.pending, (state) => {
-      //   state.isLoading = true;
-      // })
-      // .addCase(getTickets.fulfilled, (state, action) => {
-      //   state.isSuccess = true;
-      //   state.isLoading = false;
-      //   // Add any fetched data to the array
-      //   state.tickets = action.payload;
-      // })
-      // .addCase(getTickets.rejected, (state, action) => {
-      //   state.isError = true;
-      //   state.isLoading = false;
-      //   state.message = action.payload;
-      // })
+      .addCase(getTickets.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTickets.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        // Add any fetched data to the array
+        state.tickets = action.payload;
+      })
+      .addCase(getTickets.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.message = action.payload;
+      })
       .addCase(getTicket.pending, (state) => {
         state.isLoading = true;
       })
