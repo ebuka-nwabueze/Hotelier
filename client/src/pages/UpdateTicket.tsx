@@ -1,50 +1,71 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Spinner from "../components/Spinner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   createTicket,
+  getTicket,
   reset,
   selectTicket,
+  updateTicket,
 } from "../features/tickets/ticketSlice";
-import { selectAuth } from "../features/auth/authSlice";
 
 export interface FormData {
   description: string;
   category: string;
 }
 
-function NewTicket() {
-  const [formData, setformData] = useState<FormData>({
-    description: "",
-    category: "Other",
-  });
-  const { description, category } = formData;
+function UpdateTicket() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { ticketId } = useParams<{ ticketId: string }>();
 
-  const {
-    tickets,
-    ticket,
-    isError,
-    isSuccess,
-    isLoading,
-    message,
-  } = useAppSelector(selectTicket);
-  const { user } = useAppSelector(selectAuth);
+  const { ticket, isError, isSuccess, isLoading, message } = useAppSelector(
+    selectTicket
+  );
+
+  // let ticketDesc: string;
+  // let ticketCat: string;
+  // if(ticket){
+  //   ticketDesc = ticket.description
+  //   ticketCat = ticket.category
+  // }
+
+  const [formData, setformData] = useState<FormData>({
+    description: ticket ? ticket?.description : "",
+    // description: (!isLoading && ticket?.description) && ticket?.description ,
+    category: ticket ? ticket?.category : "Other",
+  });
+  
 
   useEffect(() => {
+    if(isSuccess && ticket){
+      setformData((prev) => ({ 
+        ...prev, 
+        category: ticket.category,
+        description: ticket.description
+      }));
+    }
+  }, [isSuccess, ticket])
+
+  const { description, category } = formData;
+
+  useEffect(() => {
+    if (ticketId) {
+      dispatch(getTicket(ticketId));
+    }
     if (isError) {
       toast.error(message);
     }
     if (isSuccess) {
-      toast.success("Ticket created successfully");
+      toast.success("Ticket updated successfully");
       navigate("/tickets");
     }
 
     dispatch(reset());
-  }, [isError, isSuccess, message, dispatch]);
+  }, [isError, message, dispatch, ticketId]);
 
   type EventType =
     | React.ChangeEvent<HTMLInputElement>
@@ -58,15 +79,15 @@ function NewTicket() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const ticketData = { description, category };
-    dispatch(createTicket(ticketData));
+    dispatch(updateTicket(ticketData));
   };
-  if (isLoading) return <Spinner />;
+  if (isLoading && !ticket) return <Spinner />;
 
   return (
     <div className="form-content">
       <section className="form-content-heading">
-        <h1>Create New Ticket</h1>
-        <p>Enter details for new Ticket</p>
+        <h1>Update Ticket</h1>
+        <p>Enter details to update Ticket</p>
       </section>
 
       <section className="form-content-main">
@@ -96,11 +117,13 @@ function NewTicket() {
               onChange={inputChange}
               required
             />
-            
           </div>
-          <div className="form-group">
-            <button className="btn btn-block" type="submit">
-              Create
+          <div className="button-group">
+            <Link to={`/ticket/${ticket?.id}`} className="btn-main btn-cancel">
+              Cancel
+            </Link>
+            <button className="btn-main btn-upd" type="submit">
+              Update
             </button>
           </div>
         </form>
@@ -109,4 +132,4 @@ function NewTicket() {
   );
 }
 
-export default NewTicket;
+export default UpdateTicket;

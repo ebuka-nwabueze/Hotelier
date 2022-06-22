@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../../app/store";
-import { getAllTickets, getSingleTicket, newTicket, NewTicketData } from "./ticketService";
+import { getAllTickets, getSingleTicket, newTicket, NewTicketData, ticketUpdate } from "./ticketService";
 import {UserResponseData} from "../auth/authService"
 
 interface Ticket {
@@ -47,6 +47,32 @@ export const createTicket = createAsyncThunk(
       const state = thunkAPI.getState() as RootState
       const user = state.auth.user as UserResponseData
       return await newTicket(ticketData, user.token);
+    } catch (error) {
+      let message = "";
+      if (axios.isAxiosError(error)) {
+        console.log("error message axios: ", error.message);
+        message = error.message;
+      } else if (error instanceof Error) {
+        console.log("unexpected error of thrown: ", error.message);
+        message = error.message;
+      } else {
+        console.log("unexpected error: ", error);
+        message = "An unexpected error occurred";
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+)
+  
+// update Ticket
+export const updateTicket = createAsyncThunk(
+  "tickets/update",
+  async (ticketData: NewTicketData, thunkAPI) => {
+    try {
+      // Get token from the user in auth state
+      const state = thunkAPI.getState() as RootState
+      const user = state.auth.user as UserResponseData
+      return await ticketUpdate(ticketData, user.token);
     } catch (error) {
       let message = "";
       if (axios.isAxiosError(error)) {
@@ -121,7 +147,7 @@ const ticketSlice = createSlice({
   name: "ticket",
   initialState,
   reducers: {
-    reset: (state) => initialState,
+    reset: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -135,6 +161,20 @@ const ticketSlice = createSlice({
         state.ticket = action.payload;
       })
       .addCase(createTicket.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.message = action.payload;
+      })
+      .addCase(updateTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTicket.fulfilled, (state, action) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        // Add any fetched data to the array
+        state.ticket = action.payload;
+      })
+      .addCase(updateTicket.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
         state.message = action.payload;

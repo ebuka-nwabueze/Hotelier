@@ -9,7 +9,7 @@ export interface NewTicketData {
 
 interface NewTicketResponseData {
   id: string;
-  user: string;
+  user: string; 
   description: string;
   category: string
 }
@@ -23,6 +23,15 @@ interface FullTicketResponseData extends NewTicketResponseData {
 export interface NewTicketResponse {
   data: {
     addTicket: FullTicketResponseData
+  }
+  errors: [
+    {message: string}
+  ]
+}
+
+export interface UpdateTicketResponse {
+  data: {
+    updateTicket: FullTicketResponseData
   }
   errors: [
     {message: string}
@@ -83,6 +92,45 @@ export const newTicket = async (ticketData: NewTicketData, token: string) => {
   return response.data.data.addTicket
 
 }
+
+// Update ticket
+export const ticketUpdate = async (ticketData: NewTicketData, token: string) => {
+  const {description, category} = ticketData;
+
+  const graphqlQuery = {
+    operationName: "updateTicket",
+    query: `mutation updateTicket($description: String!, $category: String!){
+      updateTicket(description: $description, category: $category) {
+        id
+        user
+        description
+        category
+      }
+    }`,
+    variables: {
+      description,
+      category
+    },
+  };
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  }
+
+  const response = await axios.post<UpdateTicketResponse>(API_URL,graphqlQuery, config)
+  console.log(response)
+  const condition1 = response.data.data.updateTicket !== null
+  if(!condition1) {
+    const error = response.data.errors[0]
+    throw new Error(error.message)
+  }
+  return response.data.data.updateTicket
+
+}
+
 export const getSingleTicket = async (ticketId: string, token: string) => {
 
   const graphqlQuery = {

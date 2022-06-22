@@ -4,7 +4,9 @@ import { toast } from "react-toastify";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
-import { getTicket, selectTicket } from "../features/tickets/ticketSlice";
+import { getTicket, reset, selectTicket } from "../features/tickets/ticketSlice";
+import { Link } from 'react-router-dom'
+
 
 function Ticket() {
   const dispatch = useAppDispatch();
@@ -33,6 +35,10 @@ function Ticket() {
     }
   }, [ticketId, message, isError]);
 
+  const resetOnClick = () => {
+    dispatch(reset())
+  }
+
   if (isLoading) return <Spinner />;
 
   return (
@@ -56,7 +62,9 @@ function Ticket() {
           <h3>Description of Issue</h3>
           <p>{ticket?.description}</p>
         </div>
-
+        <Link to={`/ticket/update/${ticket?.id}`} onClick={resetOnClick}> 
+          Update
+        </Link>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { reset, selectAuth, logout } from "../features/auth/authSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import "./Navbar/navbar.css";
+import { selectTicket, reset as ticketReset } from "../features/tickets/ticketSlice";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -16,12 +17,18 @@ const Header = () => {
 
   const { user } = useAppSelector(selectAuth);
 
+
   const onLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     dispatch(logout());
     dispatch(reset());
-    setSidebar(!sidebar)
+    setSidebar(!sidebar);
     navigate("/login");
   };
+
+  const resetTicket = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    showSideBar()
+    dispatch(ticketReset())
+  }
 
   return (
     <>
@@ -36,11 +43,19 @@ const Header = () => {
             />
             <ul className="right-nav-control">
               {user ? (
-                <li>
-                  <button className="mybutton" onClick={onLogout}>
-                    Logout
-                  </button>
-                </li>
+                <>
+                  <li>
+                    <Link to="/tickets">Tickets</Link>
+                  </li>
+                  <li>
+                    <Link to="/new-ticket" onClick={()=> dispatch(ticketReset())}>New Ticket</Link>
+                  </li>
+                  <li>
+                    <button className="mybutton" onClick={onLogout}>
+                      Logout
+                    </button>
+                  </li>
+                </>
               ) : (
                 <>
                   <li>
@@ -65,20 +80,29 @@ const Header = () => {
           </li>
           {user ? (
             <>
-            <li className="nav-text">
-              <button onClick={onLogout}>Logout</button>
-            </li>
-            <li className="nav-text">
-            <Link to="/new-ticket" onClick={showSideBar}>Create New Ticket</Link>
-            </li>
+              <li className="nav-text">
+                <Link to="/new-ticket" onClick={resetTicket}>
+                  Create New Ticket
+                </Link>
+              </li>
+              <li className="nav-text">
+                <Link to="/tickets" onClick={showSideBar}>My Tickets</Link>
+              </li>
+              <li className="nav-text">
+                <button onClick={onLogout}>Logout</button>
+              </li>
             </>
           ) : (
             <>
               <li className="nav-text">
-                <Link to="/login" onClick={showSideBar}>Login</Link>
+                <Link to="/login" onClick={showSideBar}>
+                  Login
+                </Link>
               </li>
               <li className="nav-text">
-                <Link to="/register" onClick={showSideBar}>Register</Link>
+                <Link to="/register" onClick={showSideBar}>
+                  Register
+                </Link>
               </li>
             </>
           )}

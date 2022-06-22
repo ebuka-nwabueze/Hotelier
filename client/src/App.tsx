@@ -13,6 +13,7 @@ import NewTicket from "./pages/NewTicket";
 import PrivateRoute from "./components/PrivateRoute";
 import Ticket from "./pages/Ticket";
 import Tickets from "./pages/Tickets";
+import UpdateTicket from "./pages/UpdateTicket";
 
 function App() {
   return (
@@ -31,6 +32,9 @@ function App() {
               </Route>
               <Route path="/ticket/:ticketId" element={<PrivateRoute />}>
                 <Route path="/ticket/:ticketId" element={<Ticket />} />
+              </Route>
+              <Route path="/ticket/update/:ticketId" element={<PrivateRoute />}>
+                <Route path="/ticket/update/:ticketId" element={<UpdateTicket/>} />
               </Route>
               <Route path="/tickets/" element={<PrivateRoute />}>
                 <Route path="/tickets/" element={<Tickets />} />
