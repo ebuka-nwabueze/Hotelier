@@ -29,12 +29,12 @@ app.use(
     }
 ));
 
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema: rootSchema,
-    graphiql: true,
-  }));
+// app.use(
+//   '/graphql',
+//   graphqlHTTP({
+//     schema: rootSchema,
+//     graphiql: true,
+//   }));
 
 app.listen(PORT, () => {
   console.log(`server listening on ${PORT}`)

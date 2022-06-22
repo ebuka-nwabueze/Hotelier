@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/dist/server.js",
-    "dev": "nodemon server/src/server.ts",
-    "build": "tsc -p ."
+    "server": "nodemon server/src/server.ts",
+    "client": "npm start --prefix client",
+    "build": "tsc -p .",
+    "dev": "concurrently \"nodemon server/src/server.ts\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,7 @@
     "@types/express": "^4.17.13",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.34",
+    "concurrently": "^7.2.1",
     "nodemon": "^2.0.16",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"

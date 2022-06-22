@@ -1,12 +1,4 @@
-/node_modules
-
-#environmental files
-.env
-
-#API testing
-test.http
-**/dist/
-
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
 /node_modules

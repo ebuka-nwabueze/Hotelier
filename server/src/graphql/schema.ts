@@ -12,6 +12,8 @@ import Ticket from "../models/TicketModel";
 import User, { IUser } from "../models/UserModel";
 import Auth from "../services/authService";
 
+
+
 const TicketType = new GraphQLObjectType({
   name: "TicketType",
   description: "A type definition for a single Ticket",
@@ -36,6 +38,14 @@ const TicketType = new GraphQLObjectType({
     status: {
       type: new GraphQLNonNull(GraphQLString),
       description: "This is the status of the ticket",
+    },
+    createdAt: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "This is the date the ticket was created",
+    },
+    updatedAt: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "This is the date the ticket was updated",
     },
   }),
 });
@@ -63,9 +73,9 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLList(TicketType),
       description: "This is a list of tickets associated with a user",
       resolve: (parent) => {
-        return Ticket.find({user: parent.id})
-      }
-    }
+        return Ticket.find({ user: parent.id });
+      },
+    },
   }),
 });
 
@@ -73,6 +83,18 @@ const AuthUserType = new GraphQLObjectType({
   name: "AuthUserType",
   description: "A return type for User Logged in or Signed Up",
   fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+      description: "This is a Mongoosse Object ID of the user",
+    },
+    name: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "This is a name of the User",
+    },
+    email: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: "This is a email of the User",
+    },
     token: {
       type: new GraphQLNonNull(GraphQLString),
       description: "This is a token for the signed in User",
@@ -202,8 +224,9 @@ const RootMutationType = new GraphQLObjectType({
           if (!user) throw new Error("Not Authorized");
           const dbUser = await User.findById(user.id);
           if (!dbUser) throw new Error("Not Authorized");
-          if (!description || !category)
+          if (!description || !category) {
             throw new Error("Description is required");
+          }
           const newTicket = await Ticket.create({
             user: dbUser.id,
             description,
@@ -291,7 +314,7 @@ const RootMutationType = new GraphQLObjectType({
           }
           console.log(errorMessage);
           throw new Error(errorMessage);
-        }
+        } 
       },
     },
     addUser: {
@@ -322,7 +345,12 @@ const RootMutationType = new GraphQLObjectType({
           newUser.id = newUser._id;
           const token = Auth.generateJwt(newUser.id);
           await newUser.save();
-          return { token };
+          return {
+            id: newUser.id,
+            name: newUser.name,
+            email: newUser.email,
+            token,
+          };
         } catch (error) {
           let errorMessage = "Failed to add new User";
           if (error instanceof Error) {
@@ -348,8 +376,9 @@ const RootMutationType = new GraphQLObjectType({
       },
       resolve: async (_, { email, password }) => {
         try {
-          if (!email || !password)
+          if (!email || !password) {
             throw new Error("email and password required");
+          }
           const user = await User.findOne({ email });
           if (!user) throw new Error("Invalid user credentials");
           const passwordCorrect = await Auth.matchPassword(
@@ -358,7 +387,7 @@ const RootMutationType = new GraphQLObjectType({
           );
           if (!passwordCorrect) throw new Error("Invalid user credentials");
           const token = Auth.generateJwt(user.id);
-          return { token };
+          return { id: user.id, name: user.name, email: user.email ,token };
         } catch (error) {
           let errorMessage = "Failed to login User";
           if (error instanceof Error) {
