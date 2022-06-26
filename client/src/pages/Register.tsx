@@ -30,7 +30,7 @@ function Register() {
       toast.error(message)
     }
     if(isSuccess || user){
-      navigate("/")
+      navigate("/new-ticket")
     }
     dispatch(reset());
   }, [isError, isSuccess,message, user, dispatch])

@@ -38,7 +38,7 @@ function Tickets() {
       <BackButton url="/" />
       <h1 className="aln-cnt">Tickets</h1>
       <div className="tickets">
-        {tickets ? (
+        {tickets?.length ? (
           <>
             <div className="ticket-headings">
               <div>Date</div>

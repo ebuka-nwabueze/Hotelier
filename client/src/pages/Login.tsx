@@ -26,7 +26,7 @@ function Login() {
       toast.error(message)
     }
     if(isSuccess || user){
-      navigate("/")
+      navigate("/tickets")
     }
     dispatch(reset());
   }, [isError, isSuccess,message, user, dispatch])

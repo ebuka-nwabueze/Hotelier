@@ -1,22 +1,29 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../../app/store";
-import { getAllTickets, getSingleTicket, newTicket, NewTicketData, ticketUpdate } from "./ticketService";
-import {UserResponseData} from "../auth/authService"
+import {
+  getAllTickets,
+  getSingleTicket,
+  newTicket,
+  NewTicketData,
+  UpdateTicketData,
+  ticketUpdate,
+  ticketDelete,
+} from "./ticketService";
+import { UserResponseData } from "../auth/authService";
 
 interface Ticket {
   id: string;
   user: string;
   category: string;
   description: string;
-  status: string
+  status: string;
 }
 
 export interface FullTicket extends Ticket {
   createdAt: string;
-  updatedAt: string
+  updatedAt: string;
 }
-
 
 export interface TicketState {
   tickets: FullTicket[] | null;
@@ -30,13 +37,11 @@ export interface TicketState {
 const initialState: TicketState = {
   tickets: null,
   ticket: null,
-  isError: false, 
+  isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
-
-
 
 // Create new Ticket
 export const createTicket = createAsyncThunk(
@@ -44,8 +49,8 @@ export const createTicket = createAsyncThunk(
   async (ticketData: NewTicketData, thunkAPI) => {
     try {
       // Get token from the user in auth state
-      const state = thunkAPI.getState() as RootState
-      const user = state.auth.user as UserResponseData
+      const state = thunkAPI.getState() as RootState;
+      const user = state.auth.user as UserResponseData;
       return await newTicket(ticketData, user.token);
     } catch (error) {
       let message = "";
@@ -62,17 +67,43 @@ export const createTicket = createAsyncThunk(
       return thunkAPI.rejectWithValue(message);
     }
   }
-)
-  
+);
+
 // update Ticket
 export const updateTicket = createAsyncThunk(
   "tickets/update",
-  async (ticketData: NewTicketData, thunkAPI) => {
+  async (ticketData: UpdateTicketData, thunkAPI) => {
     try {
       // Get token from the user in auth state
-      const state = thunkAPI.getState() as RootState
-      const user = state.auth.user as UserResponseData
+      const state = thunkAPI.getState() as RootState;
+      const user = state.auth.user as UserResponseData;
       return await ticketUpdate(ticketData, user.token);
+    } catch (error) {
+      let message = "";
+      if (axios.isAxiosError(error)) {
+        console.log("error message axios: ", error.message);
+        message = error.message;
+      } else if (error instanceof Error) {
+        console.log("unexpected error of thrown: ", error.message);
+        message = error.message;
+      } else {
+        console.log("unexpected error: ", error);
+        message = "An unexpected error occurred";
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// delete Ticket
+export const deleteTicket = createAsyncThunk(
+  "tickets/delete",
+  async (ticketId: string, thunkAPI) => {
+    try {
+      // Get token from the user in auth state
+      const state = thunkAPI.getState() as RootState;
+      const user = state.auth.user as UserResponseData;
+      return await ticketDelete(ticketId, user.token);
     } catch (error) {
       let message = "";
       if (axios.isAxiosError(error)) {
@@ -96,8 +127,8 @@ export const getTicket = createAsyncThunk(
   async (ticketId: string, thunkAPI) => {
     try {
       // Get token from the user in auth state
-      const state = thunkAPI.getState() as RootState
-      const user = state.auth.user as UserResponseData
+      const state = thunkAPI.getState() as RootState;
+      const user = state.auth.user as UserResponseData;
       return await getSingleTicket(ticketId, user.token);
     } catch (error) {
       let message = "";
@@ -119,11 +150,11 @@ export const getTicket = createAsyncThunk(
 // get single Ticket
 export const getTickets = createAsyncThunk(
   "tickets/getTickets",
-  async (_,thunkAPI) => {
+  async (_, thunkAPI) => {
     try {
       // Get token from the user in auth state
-      const state = thunkAPI.getState() as RootState
-      const user = state.auth.user as UserResponseData
+      const state = thunkAPI.getState() as RootState;
+      const user = state.auth.user as UserResponseData;
       return await getAllTickets(user.token);
     } catch (error) {
       let message = "";
@@ -141,7 +172,6 @@ export const getTickets = createAsyncThunk(
     }
   }
 );
-
 
 const ticketSlice = createSlice({
   name: "ticket",
@@ -179,6 +209,19 @@ const ticketSlice = createSlice({
         state.isLoading = false;
         state.message = action.payload;
       })
+      .addCase(deleteTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTicket.fulfilled, (state) => {
+        state.isSuccess = true;
+        state.isLoading = false;
+        // Add any fetched data to the array
+      })
+      .addCase(deleteTicket.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.message = action.payload;
+      })
       .addCase(getTickets.pending, (state) => {
         state.isLoading = true;
       })
@@ -206,20 +249,19 @@ const ticketSlice = createSlice({
         state.isError = true;
         state.isLoading = false;
         state.message = action.payload;
-      })
-      // .addCase(ticketClose.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      //   state.tickets.map((ticket) =>
-      //     ticket._id === action.payload._id
-      //       ? (ticket.status = "closed")
-      //       : ticket
-      //   );
-      // });
+      });
+    // .addCase(ticketClose.fulfilled, (state, action) => {
+    //   state.isLoading = false;
+    //   state.tickets.map((ticket) =>
+    //     ticket._id === action.payload._id
+    //       ? (ticket.status = "closed")
+    //       : ticket
+    //   );
+    // });
   },
 });
 
 export const { reset } = ticketSlice.actions;
 export const selectTicket = (state: RootState) => state.ticket;
-
 
 export default ticketSlice.reducer;

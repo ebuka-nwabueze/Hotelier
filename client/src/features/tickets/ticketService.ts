@@ -7,6 +7,12 @@ export interface NewTicketData {
   category: string
 }
 
+export interface UpdateTicketData {
+  id: string;
+  description: string;
+  category: string
+}
+
 interface NewTicketResponseData {
   id: string;
   user: string; 
@@ -32,6 +38,15 @@ export interface NewTicketResponse {
 export interface UpdateTicketResponse {
   data: {
     updateTicket: FullTicketResponseData
+  }
+  errors: [
+    {message: string}
+  ]
+}
+
+export interface DeleteTicketResponse {
+  data: {
+    deleteTicket: string
   }
   errors: [
     {message: string}
@@ -94,13 +109,13 @@ export const newTicket = async (ticketData: NewTicketData, token: string) => {
 }
 
 // Update ticket
-export const ticketUpdate = async (ticketData: NewTicketData, token: string) => {
-  const {description, category} = ticketData;
+export const ticketUpdate = async (ticketData: UpdateTicketData, token: string) => {
+  const {id, description, category} = ticketData;
 
   const graphqlQuery = {
     operationName: "updateTicket",
-    query: `mutation updateTicket($description: String!, $category: String!){
-      updateTicket(description: $description, category: $category) {
+    query: `mutation updateTicket($id: String!, $description: String!, $category: String!){
+      updateTicket(id: $id, description: $description, category: $category) {
         id
         user
         description
@@ -109,7 +124,8 @@ export const ticketUpdate = async (ticketData: NewTicketData, token: string) => 
     }`,
     variables: {
       description,
-      category
+      category,
+      id
     },
   };
 
@@ -157,9 +173,7 @@ export const getSingleTicket = async (ticketId: string, token: string) => {
       "Content-Type": "application/json"
     }
   }
-  console.log("making axios getTicket request", ticketId)
   const response = await axios.post<TicketResponse>(API_URL,graphqlQuery, config)
-  console.log(response)
   const condition1 = response.data.data.ticket !== null
   if(!condition1) {
     const error = response.data.errors[0]
@@ -194,7 +208,6 @@ export const getAllTickets = async (token: string) => {
   }
   console.log("making axios getAllTicket request")
   const response = await axios.post<TicketsResponse>(API_URL,graphqlQuery, config)
-  console.log(response)
   const condition1 = response.data.data.tickets !== null
   if(!condition1) {
     const error = response.data.errors[0]
@@ -202,4 +215,33 @@ export const getAllTickets = async (token: string) => {
   }
 
   return response.data.data.tickets
+}
+
+export const ticketDelete = async (ticketId: string, token: string) => {
+
+  const graphqlQuery = {
+    operationName: "deleteTicket",
+    query: `mutation deleteTicket($id: String!){
+      deleteTicket(id: $id)
+    }`,
+    variables: {
+      id: ticketId
+    },
+  };
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    }
+  }
+  const response = await axios.post<DeleteTicketResponse>(API_URL,graphqlQuery, config)
+  console.log(response)
+  const condition1 = response.data.data.deleteTicket !== null
+  if(!condition1) {
+    const error = response.data.errors[0]
+    throw new Error(error.message)
+  }
+
+  return response.data.data.deleteTicket
 }

@@ -7,7 +7,7 @@ type AuthStatus = {
   loggedIn: boolean
 }
 
-export function useAuthStatus (): AuthStatus {
+export function useAuthStatus(): AuthStatus {
   const [authLoading, setAuthLoading] = useState<boolean>(true)
   const [loggedIn, setloggedIn] = useState<boolean>(false)
 
