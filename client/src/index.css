@@ -116,19 +116,16 @@ button:hover {
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
   justify-content: center;
   align-items: center;
   padding: 20px;
 }
 
-.top-inner{
-  /* padding: 20px; */
-}
 
 .top-inner > p:first-child {
-  /* margin-bottom: 10px; */
-  font-size: 35px;
+  margin-bottom: 30px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -381,6 +378,9 @@ button:hover {
   .ticket-status {
     align-self: start;
     order: 2;
+  }
+  .top-inner > p:first-child{
+    font-size: 50px;
   }
 }
 

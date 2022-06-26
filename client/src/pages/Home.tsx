@@ -5,12 +5,12 @@ const Home = () => {
     <div>
       <section className="top-section">
         <div className="top-inner container">
-          <p> Experience new Way to keep track of your tickets.</p>
+          <p> Experience a new Way to keep track of your internal tickets requests.</p>
           <p>Tracking your requests have never been better.</p>
         </div>
       </section>
       <section>
-        
+
       </section>
     </div>
   )
