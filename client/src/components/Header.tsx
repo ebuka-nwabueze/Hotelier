@@ -6,7 +6,7 @@ import { reset, selectAuth, logout } from "../features/auth/authSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import "./Navbar/navbar.css";
-import { selectTicket, reset as ticketReset } from "../features/tickets/ticketSlice";
+import {  reset as ticketReset } from "../features/tickets/ticketSlice";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -82,7 +82,7 @@ const Header = () => {
             <>
               <li className="nav-text">
                 <Link to="/new-ticket" onClick={resetTicket}>
-                  Create New Ticket
+                  New Ticket
                 </Link>
               </li>
               <li className="nav-text">

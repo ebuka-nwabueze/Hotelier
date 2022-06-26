@@ -1,14 +1,11 @@
-
-
 const Footer = () => {
-  const date = new Date()
-  const currentDate = date.getFullYear()
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="footer">
       <p>Hotelier </p>
-      <p>copyright &copy; {currentDate} - All right reserved</p>
+      <p>copyright &copy; {currentYear} - All right reserved</p>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

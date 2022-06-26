@@ -25,8 +25,6 @@ function NewTicket() {
   const dispatch = useAppDispatch();
 
   const {
-    tickets,
-    ticket,
     isError,
     isSuccess,
     isLoading,

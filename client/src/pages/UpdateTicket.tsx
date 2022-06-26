@@ -25,23 +25,17 @@ function UpdateTicket() {
   const { ticket, isError, isSuccess, isLoading, message } = useAppSelector(
     selectTicket
   );
-
-  // let ticketDesc: string;
-  // let ticketCat: string;
-  // if(ticket){
-  //   ticketDesc = ticket.description
-  //   ticketCat = ticket.category
-  // }
-
+  
+  const [isUpdate, setIsUpdate] = useState<boolean>(false)
   const [formData, setformData] = useState<FormData>({
     description: ticket ? ticket?.description : "",
     // description: (!isLoading && ticket?.description) && ticket?.description ,
-    category: ticket ? ticket?.category : "Other",
+    category: ticket?.category ??  "Other",
   });
   
 
   useEffect(() => {
-    if(isSuccess && ticket){
+    if(isSuccess && ticket) {
       setformData((prev) => ({ 
         ...prev, 
         category: ticket.category,
@@ -55,17 +49,18 @@ function UpdateTicket() {
   useEffect(() => {
     if (ticketId) {
       dispatch(getTicket(ticketId));
+      console.log("dispatching")
     }
     if (isError) {
       toast.error(message);
     }
-    if (isSuccess) {
+    if (isSuccess && isUpdate) {
       toast.success("Ticket updated successfully");
       navigate("/tickets");
+      dispatch(reset())
     }
-
-    dispatch(reset());
-  }, [isError, message, dispatch, ticketId]);
+    console.log("from second UseEffect")
+  }, [isError, message,ticketId, isSuccess, isUpdate]);
 
   type EventType =
     | React.ChangeEvent<HTMLInputElement>
@@ -78,8 +73,10 @@ function UpdateTicket() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const ticketData = { description, category };
+    const id = ticket?.id as string
+    const ticketData = { description, category, id };
     dispatch(updateTicket(ticketData));
+    setIsUpdate(prev => !prev)
   };
   if (isLoading && !ticket) return <Spinner />;
 
