@@ -21,10 +21,11 @@ function App() {
       <Router>
         <Header />
         <div className="flex-wrapper">
+          <Routes>
+            <Route path="/" element={<Home />} />
+          </Routes>
           <div className="container">
-            {/* <main className="content"></main> */}
             <Routes>
-              <Route path="" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/new-ticket" element={<PrivateRoute />}>
@@ -34,7 +35,10 @@ function App() {
                 <Route path="/ticket/:ticketId" element={<Ticket />} />
               </Route>
               <Route path="/ticket/update/:ticketId" element={<PrivateRoute />}>
-                <Route path="/ticket/update/:ticketId" element={<UpdateTicket/>} />
+                <Route
+                  path="/ticket/update/:ticketId"
+                  element={<UpdateTicket />}
+                />
               </Route>
               <Route path="/tickets/" element={<PrivateRoute />}>
                 <Route path="/tickets/" element={<Tickets />} />

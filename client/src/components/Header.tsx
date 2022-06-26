@@ -34,7 +34,9 @@ const Header = () => {
     <>
       <nav className="header">
         <div className="navbar">
-          <div className="brand-nav">Hotelier</div>
+          <div className="brand-nav">
+            <Link className="brand" to="/">Hotelier</Link>
+          </div>
           <div className="right-nav">
             <GiHamburgerMenu
               className="right-nav-icon"

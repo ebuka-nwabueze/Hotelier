@@ -43,6 +43,7 @@ function Ticket() {
     }
     if(isSuccess && isDelete){
       navigate("/tickets")
+      toast.success("Ticket deleted Succesfully")
     }
   }, [ticketId, message, isError, isDelete, isSuccess]);
 

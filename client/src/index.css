@@ -4,6 +4,7 @@
   --bg-color-ash: #ebeced;
   --bg-color-ash-02: #dde4eb;
   --app-gray-01: #38454d;
+  --app-gray-02: #78868f;
   --bg-btn-01: #087cac;
   --bg-btn-02: #429cc2;
   --app-green: green;
@@ -63,6 +64,11 @@ body {
   align-items: center;
 }
 
+.brand{
+  text-decoration: none;
+  color: black;
+}
+
 .brand-nav {
   font-weight: bold;
   font-size: x-large;
@@ -102,6 +108,28 @@ button:hover {
   /* background-color: white; */
   padding: 0 20px;
   /* height: 100vh; */
+}
+
+.top-section{
+  height:850px;
+  background-color: var(--app-gray-02);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.top-inner{
+  /* padding: 20px; */
+}
+
+.top-inner > p:first-child {
+  /* margin-bottom: 10px; */
+  font-size: 35px;
+  font-weight: bold;
 }
 
 .content {
