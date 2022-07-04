@@ -32,7 +32,7 @@ export function useUserStatus(): UserStatus {
     localStorage.removeItem("user");
     queryClient.setQueryData("user", null);
     queryClient.removeQueries(["ticket", "user", "tickets"])
-    queryClient.invalidateQueries()
+    // queryClient.invalidateQueries()
   };
 
   useEffect(() => {

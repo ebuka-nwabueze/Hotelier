@@ -8,8 +8,6 @@ import {
   FullTicketResponseData,
   UpdateTicketData,
   UserResponseData,
-  UpdateTicketResponse,
-  DeleteTicketData,
   NewTicketData,
 } from "../../types/types";
 import {

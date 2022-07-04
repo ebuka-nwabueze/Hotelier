@@ -34,7 +34,7 @@ function Register() {
     if(mutation.isSuccess || user){
       navigate("/tickets")
     }
-
+    // eslint-disable-next-line
   }, [mutation.isError, mutation.isSuccess, user])
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

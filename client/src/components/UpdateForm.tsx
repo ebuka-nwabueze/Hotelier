@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { useNavigate, useParams } from "react-router-dom";
 import {  FullTicket } from "../types/types";
-import { useDeleteTicket, useUpdateTicket } from "../queryState/tickets/ticketQuery";
+import { useUpdateTicket } from "../queryState/tickets/ticketQuery";
 
 
 export interface FormData {
@@ -12,9 +10,6 @@ export interface FormData {
   category: string;
 }
 
-interface Ticket {
-  ticket: FullTicket
-}
 
 interface TicketEdit {
   ticket: FullTicket;
@@ -46,9 +41,10 @@ function UpdateForm({ticket, setIsEdit }: TicketEdit ) {
   //once the form is updated succesfully
   useEffect(() => {
     if(mutation.isSuccess){
+      toast.success("Ticket updated successfully")
       setIsEdit(prev => !prev)
     }
-  }, [mutation.isSuccess])
+  }, [mutation.isSuccess, setIsEdit])
 
   const onCancel = () => {
     setIsEdit((prev) => !prev)

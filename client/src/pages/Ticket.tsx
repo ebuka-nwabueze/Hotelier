@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BackButton from "../components/BackButton";
@@ -11,7 +11,6 @@ function Ticket() {
 
 
   const { ticketId } = useParams<{ ticketId: string }>();
-  const [isDelete, setIsDelete] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
 
   const data = useSingleTicket(ticketId)
@@ -24,6 +23,7 @@ function Ticket() {
     dateCreated = new Date(parseInt(newDate)).toLocaleDateString();
   }
 
+
   useEffect(() => {
 
     if (deleteMutation.isError) {
@@ -33,6 +33,7 @@ function Ticket() {
       navigate("/tickets")
       toast.success("Ticket deleted Succesfully")
     }
+    // eslint-disable-next-line
   }, [deleteMutation.isError, deleteMutation.isSuccess]);
 
 
@@ -90,3 +91,5 @@ function Ticket() {
 }
 
 export default Ticket;
+
+  // // eslint-disable-next-line
