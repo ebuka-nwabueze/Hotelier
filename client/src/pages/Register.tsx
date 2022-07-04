@@ -4,6 +4,8 @@ import {useNavigate} from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { register, reset, selectAuth } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
+import { useRegisterUser } from "../queryState/auth/authQuery";
+import { useUserStatus } from "../hooks/useUserStatus";
 
 export interface FormData {
   name: string;
@@ -20,20 +22,22 @@ function Register() {
     password2: ""
   });
   const { name, email, password, password2 } = formData;
-  const {user,isError,isSuccess,isLoading,message} = useAppSelector(selectAuth)
 
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const mutation = useRegisterUser()
+  const {user} = useUserStatus()
+
 
   useEffect(() => {
-    if(isError){
-      toast.error(message)
+    if(mutation.isError){
+      toast.error(mutation.error.message)
+      console.log(mutation.error.message)
     }
-    if(isSuccess || user){
+    if(mutation.isSuccess || user){
       navigate("/tickets")
     }
-    dispatch(reset());
-  }, [isError, isSuccess,message, user, dispatch])
+
+  }, [mutation.isError, mutation.isSuccess, user])
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setformData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -45,11 +49,11 @@ function Register() {
       toast.error("Passwords do not match");
     } else {
       const usersData = { name, email, password };
-      dispatch(register(usersData));
+      mutation.mutate(usersData)
     }
   }
 
-  if(isLoading) return <Spinner/>
+  if(mutation.isLoading) return <Spinner/>
 
   return (
     <div className="form-content">

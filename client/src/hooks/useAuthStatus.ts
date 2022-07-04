@@ -21,6 +21,6 @@ export function useAuthStatus(): AuthStatus {
     }
     setAuthLoading(false)
   }, [user])
-  return {authLoading,loggedIn}
+  return {authLoading,loggedIn} 
 }
 

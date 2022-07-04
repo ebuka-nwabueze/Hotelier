@@ -1,5 +1,4 @@
 import React from "react";
-
 import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -21,11 +20,12 @@ function App() {
       <Router>
         <Header />
         <div className="flex-wrapper">
-          <Routes>
+          {/* <Routes>
             <Route path="/" element={<Home />} />
-          </Routes>
+          </Routes> */}
           <div className="container">
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/new-ticket" element={<PrivateRoute />}>

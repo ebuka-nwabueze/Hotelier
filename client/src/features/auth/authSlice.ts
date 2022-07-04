@@ -18,14 +18,9 @@ export interface AuthState {
   message: any;
 }
 const localUser = localStorage.getItem("user") === null ? null :localStorage.getItem("user")
-// // console.log(localUser)
-// const user = JSON.parse(localUser || "");
-// console.log("localUser", localStorage.getItem("user") === null);
-// const localUser = localStorage.getItem("user");
-// console.log("localUser2", localUser);
-// @ts-ignore
+
+// @ts-ignore 
 const user = JSON.parse(localUser);
-console.log("user",user)
 
 const initialState: AuthState = {
   // user: user === null ? null : user,

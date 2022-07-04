@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { reset, selectAuth, logout } from "../features/auth/authSlice";
@@ -7,21 +7,29 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
 import "./Navbar/navbar.css";
 import {  reset as ticketReset } from "../features/tickets/ticketSlice";
+import { useUserStatus } from "../hooks/useUserStatus";
+import { UserResponseData } from "../types/types";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const {user: userInfo, clearUser} = useUserStatus()
+  const [user, setUser] = useState<UserResponseData| null>(userInfo);
+
   const [sidebar, setSidebar] = useState<boolean>(false);
   const showSideBar = () => setSidebar(!sidebar);
 
-  const { user } = useAppSelector(selectAuth);
-
+  // set user immediately the user status changes. 
+  // This shows the appropriate view of login, logout etc
+  useEffect(() => {
+    setUser(userInfo)
+  }, [userInfo]);
 
   const onLogout = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    dispatch(logout());
-    dispatch(reset());
-    setSidebar(!sidebar);
+    clearUser()
+    setUser(null)
+    if(sidebar) setSidebar(!sidebar);
     navigate("/login");
   };
 
