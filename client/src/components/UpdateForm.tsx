@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Spinner from "../components/Spinner";
 import { useNavigate, useParams } from "react-router-dom";
 import {  FullTicket } from "../types/types";
-import { useUpdateTicket } from "../queryState/tickets/ticketQuery";
+import { useDeleteTicket, useUpdateTicket } from "../queryState/tickets/ticketQuery";
 
 
 export interface FormData {

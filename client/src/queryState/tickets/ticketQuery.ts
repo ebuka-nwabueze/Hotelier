@@ -9,8 +9,16 @@ import {
   UpdateTicketData,
   UserResponseData,
   UpdateTicketResponse,
+  DeleteTicketData,
+  NewTicketData,
 } from "../../types/types";
-import { getAllTickets, getSingleTicket, ticketUpdate } from "./ticketApi";
+import {
+  getAllTickets,
+  getSingleTicket,
+  newTicket,
+  ticketDelete,
+  ticketUpdate,
+} from "./ticketApi";
 
 export const useAllTickets = () => {
   const queryClient = useQueryClient();
@@ -38,18 +46,58 @@ export const useSingleTicket = (id: string | undefined) => {
   );
 };
 
-export const useUpdateTicket = (): UseMutationResult<
-FullTicketResponseData,
-Error, 
-UpdateTicketData
+// Create Ticket Mutation
+export const useCreateTicket = (): UseMutationResult<
+  FullTicketResponseData,
+  Error,
+  NewTicketData
 > => {
   const queryClient = useQueryClient();
   const user = queryClient.getQueryData<UserResponseData>("user");
   const token = user?.token as string;
-  return useMutation( async (ticketData) =>  await ticketUpdate(ticketData, token), {
+  return useMutation(async (ticketData) => await newTicket(ticketData, token), {
     onSuccess: (data) => {
-      // Update data quickly 
-      queryClient.setQueryData(["ticket", data.id],data) 
+      // Create new ticket with data quickly
+      const previousTickets:
+        | FullTicketResponseData[]
+        | undefined = queryClient.getQueryData("tickets");
+      if(previousTickets){
+        queryClient.setQueryData(["tickets"], [...previousTickets, data]);
+      }
+      queryClient.invalidateQueries(["tickets"]);
+    },
+  });
+};
+
+// Update Ticket Mutation
+export const useUpdateTicket = (): UseMutationResult<
+  FullTicketResponseData,
+  Error,
+  UpdateTicketData
+> => {
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData<UserResponseData>("user");
+  const token = user?.token as string;
+  return useMutation(
+    async (ticketData) => await ticketUpdate(ticketData, token),
+    {
+      onSuccess: (data) => {
+        // Update data quickly
+        queryClient.setQueryData(["ticket", data.id], data);
+      },
     }
+  );
+};
+
+//Delete Ticket mutation
+export const useDeleteTicket = (): UseMutationResult<string, Error, string> => {
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData<UserResponseData>("user");
+  const token = user?.token as string;
+  return useMutation((ticketId) => ticketDelete(ticketId, token), {
+    onSuccess: (data) => {
+      // Update data quickly
+      queryClient.invalidateQueries("tickets");
+    },
   });
 };

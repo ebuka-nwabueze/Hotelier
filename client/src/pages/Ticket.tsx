@@ -1,35 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
-import {
-  deleteTicket,
-  getTicket,
-  reset,
-  selectTicket,
-} from "../features/tickets/ticketSlice";
 import { Link } from "react-router-dom";
-import { useSingleTicket } from "../queryState/tickets/ticketQuery";
+import { useDeleteTicket, useSingleTicket } from "../queryState/tickets/ticketQuery";
 import UpdateForm from "../components/UpdateForm";
 
 function Ticket() {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const {
-    tickets,
-    ticket,
-    isError,
-    isSuccess,
-    isLoading,
-    message,
-  } = useAppSelector(selectTicket);
+
+
   const { ticketId } = useParams<{ ticketId: string }>();
   const [isDelete, setIsDelete] = useState<boolean>(false)
   const [isEdit, setIsEdit] = useState<boolean>(false)
 
   const data = useSingleTicket(ticketId)
+  const deleteMutation = useDeleteTicket ()
+
 
   let dateCreated = "";
   if (data.data?.createdAt) {
@@ -45,21 +33,17 @@ function Ticket() {
     if (data.isError) {
       toast.error(data.error.message);
     }
-    if(isSuccess && isDelete){
+    if (deleteMutation.isSuccess){
       navigate("/tickets")
       toast.success("Ticket deleted Succesfully")
     }
-  }, [ticketId, message, data.isError, isDelete, isSuccess]);
+  }, [ticketId, data.isError, isDelete]);
 
-  const resetOnClick = () => {
-    dispatch(reset());
-  };
 
   const onDelete = () => {
     if(window.confirm("Do you want to Delete?")){
       const id = data.data?.id as string
-      dispatch(deleteTicket(id))
-      setIsDelete(prev => !prev)
+      deleteMutation.mutate(id)
     }
   }
 

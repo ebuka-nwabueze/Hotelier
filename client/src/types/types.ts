@@ -120,6 +120,10 @@ export interface DeleteTicketResponse {
   ]
 }
 
+export interface DeleteTicketData {
+  deleteTicket: string
+}
+
 export interface TicketResponse {
   data: {
     ticket:FullTicketResponseData

@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Spinner from "../components/Spinner";
 import { useNavigate } from "react-router-dom";
-import {
-  createTicket,
-  reset,
-  selectTicket,
-} from "../features/tickets/ticketSlice";
-import { selectAuth } from "../features/auth/authSlice";
+import { useCreateTicket } from "../queryState/tickets/ticketQuery";
 
 export interface FormData {
   description: string;
@@ -22,27 +16,18 @@ function NewTicket() {
   });
   const { description, category } = formData;
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
-  const {
-    isError,
-    isSuccess,
-    isLoading,
-    message,
-  } = useAppSelector(selectTicket);
-  const { user } = useAppSelector(selectAuth);
+  const mutation = useCreateTicket()
 
   useEffect(() => {
-    if (isError) {
-      toast.error(message);
+    if (mutation.isError) {
+      toast.error(mutation.error.message);
     }
-    if (isSuccess) {
+    if (mutation.isSuccess) {
       toast.success("Ticket created successfully");
       navigate("/tickets");
     }
-
-    dispatch(reset());
-  }, [isError, isSuccess, message, dispatch]);
+  }, [mutation.isError, mutation.isSuccess]);
 
   type EventType =
     | React.ChangeEvent<HTMLInputElement>
@@ -56,9 +41,9 @@ function NewTicket() {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const ticketData = { description, category };
-    dispatch(createTicket(ticketData));
+    mutation.mutate(ticketData)
   };
-  if (isLoading) return <Spinner />;
+  if (mutation.isLoading) return <Spinner />;
 
   return (
     <div className="form-content">
