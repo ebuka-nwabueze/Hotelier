@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
-import { Link } from "react-router-dom";
 import { useDeleteTicket, useSingleTicket } from "../queryState/tickets/ticketQuery";
 import UpdateForm from "../components/UpdateForm";
 
@@ -26,18 +25,15 @@ function Ticket() {
   }
 
   useEffect(() => {
-    if (ticketId) {
-      
-      console.log("dispatching Ticket page");
-    }
-    if (data.isError) {
-      toast.error(data.error.message);
+
+    if (deleteMutation.isError) {
+      toast.error(deleteMutation.error.message);
     }
     if (deleteMutation.isSuccess){
       navigate("/tickets")
       toast.success("Ticket deleted Succesfully")
     }
-  }, [ticketId, data.isError, isDelete]);
+  }, [deleteMutation.isError, deleteMutation.isSuccess]);
 
 
   const onDelete = () => {
@@ -51,7 +47,7 @@ function Ticket() {
     setIsEdit(!isEdit)
   }
 
-  if (data.isLoading || !data.data) return <Spinner />;
+  if (data.isLoading || !data.data || deleteMutation.isLoading) return <Spinner />;
 
   return (
   isEdit ? <UpdateForm ticket={data.data} setIsEdit={setIsEdit}/> :
