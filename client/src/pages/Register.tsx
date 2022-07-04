@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import {useNavigate} from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { register, reset, selectAuth } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
 import { useRegisterUser } from "../queryState/auth/authQuery";
 import { useUserStatus } from "../hooks/useUserStatus";

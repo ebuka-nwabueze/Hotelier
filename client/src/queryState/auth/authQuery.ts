@@ -1,6 +1,5 @@
-import { useQuery, useMutation, useQueryClient, UseMutationResult } from "react-query";
-import { UserLoginResponse, UserLoginData } from "../../features/auth/authService";
-import { UserRegisterData, UserRegisterResponse, UserResponseData } from "../../types/types";
+import { useQuery, useMutation, useQueryClient, UseMutationResult } from "react-query"
+import { UserRegisterData, UserRegisterResponse, UserResponseData, UserLoginData } from "../../types/types";
 import { authLogin, authRegister  } from "./authApi";
 
 export const useLoginUser = (): UseMutationResult<UserResponseData, Error, UserLoginData> => {

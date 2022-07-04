@@ -3,7 +3,6 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { store } from "./app/store";
 import { persistQueryClient } from 'react-query/persistQueryClient-experimental'
 import { createWebStoragePersistor } from 'react-query/createWebStoragePersistor-experimental'
 import App from "./App";
@@ -29,12 +28,10 @@ persistQueryClient({
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <App />
         <ReactQueryDevtools />
       </QueryClientProvider>
-    </Provider>
   </React.StrictMode>
 );
 

@@ -1,5 +1,4 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useAuthStatus } from "../hooks/useAuthStatus";
 import { useUserStatus } from "../hooks/useUserStatus";
 import Spinner from "./Spinner";
 

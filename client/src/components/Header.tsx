@@ -1,22 +1,17 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { reset, selectAuth, logout } from "../features/auth/authSlice";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiOutlineClose } from "react-icons/ai";
-import "./Navbar/navbar.css";
-import {  reset as ticketReset } from "../features/tickets/ticketSlice";
+import "./Navbar/navbar.css"
 import { useUserStatus } from "../hooks/useUserStatus";
 import { UserResponseData } from "../types/types";
 
 const Header = () => {
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const {user: userInfo, clearUser} = useUserStatus()
   const [user, setUser] = useState<UserResponseData| null>(userInfo);
-
   const [sidebar, setSidebar] = useState<boolean>(false);
   const showSideBar = () => setSidebar(!sidebar);
 
@@ -35,7 +30,7 @@ const Header = () => {
 
   const resetTicket = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     showSideBar()
-    dispatch(ticketReset())
+
   }
 
   return (
@@ -58,7 +53,7 @@ const Header = () => {
                     <Link to="/tickets">Tickets</Link>
                   </li>
                   <li>
-                    <Link to="/new-ticket" onClick={()=> dispatch(ticketReset())}>New Ticket</Link>
+                    <Link to="/new-ticket">New Ticket</Link>
                   </li>
                   <li>
                     <button className="mybutton" onClick={onLogout}>

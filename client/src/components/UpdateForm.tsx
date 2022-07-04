@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Spinner from "../components/Spinner";
 import { useNavigate, useParams } from "react-router-dom";
 import {  FullTicket } from "../types/types";
