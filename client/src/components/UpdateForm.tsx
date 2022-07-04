@@ -1,67 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
 import Spinner from "../components/Spinner";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  createTicket,
-  getTicket,
-  reset,
-  selectTicket,
-  updateTicket,
-} from "../features/tickets/ticketSlice";
+import {  FullTicket } from "../types/types";
+import { useUpdateTicket } from "../queryState/tickets/ticketQuery";
+
 
 export interface FormData {
   description: string;
   category: string;
 }
 
-function UpdateTicket() {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { ticketId } = useParams<{ ticketId: string }>();
 
-  const { ticket, isError, isSuccess, isLoading, message } = useAppSelector(
-    selectTicket
-  );
+interface TicketEdit {
+  ticket: FullTicket;
+  setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function UpdateForm({ticket, setIsEdit }: TicketEdit ) {
+
+  const [formData, setformData] = useState<FullTicket>({...ticket});
+  const {category, description, id} = formData
+
+  const mutation = useUpdateTicket()
   
-  const [isUpdate, setIsUpdate] = useState<boolean>(false)
-  const [formData, setformData] = useState<FormData>({
-    description: ticket ? ticket?.description : "",
-    // description: (!isLoading && ticket?.description) && ticket?.description ,
-    category: ticket?.category ??  "Other",
-  });
-  
-
-  useEffect(() => {
-    if(isSuccess && ticket) {
-      setformData((prev) => ({ 
-        ...prev, 
-        category: ticket.category,
-        description: ticket.description
-      }));
-    }
-  }, [isSuccess, ticket])
-
-  const { description, category } = formData;
-
-  useEffect(() => {
-    if (ticketId) {
-      dispatch(getTicket(ticketId));
-      console.log("dispatching")
-    }
-    if (isError) {
-      toast.error(message);
-    }
-    if (isSuccess && isUpdate) {
-      toast.success("Ticket updated successfully");
-      navigate("/tickets");
-      dispatch(reset())
-    }
-    console.log("from second UseEffect")
-  }, [isError, message,ticketId, isSuccess, isUpdate]);
-
   type EventType =
     | React.ChangeEvent<HTMLInputElement>
     | React.ChangeEvent<HTMLSelectElement>
@@ -73,12 +34,23 @@ function UpdateTicket() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const id = ticket?.id as string
     const ticketData = { description, category, id };
-    dispatch(updateTicket(ticketData));
-    setIsUpdate(prev => !prev)
+    mutation.mutate(ticketData)
   };
-  if (isLoading && !ticket) return <Spinner />;
+
+  //once the form is updated succesfully
+  useEffect(() => {
+    if(mutation.isSuccess){
+      toast.success("Ticket updated successfully")
+      setIsEdit(prev => !prev)
+    }
+  }, [mutation.isSuccess, setIsEdit])
+
+  const onCancel = () => {
+    setIsEdit((prev) => !prev)
+  }
+
+  if (mutation.isLoading) return <Spinner />;
 
   return (
     <div className="form-content">
@@ -116,9 +88,9 @@ function UpdateTicket() {
             />
           </div>
           <div className="button-group">
-            <Link to={`/ticket/${ticket?.id}`} className="btn-main btn-cancel">
+            <button onClick={onCancel} className="btn-main btn-cancel">
               Cancel
-            </Link>
+            </button>
             <button className="btn-main btn-upd" type="submit">
               Update
             </button>
@@ -129,4 +101,4 @@ function UpdateTicket() {
   );
 }
 
-export default UpdateTicket;
+export default UpdateForm;

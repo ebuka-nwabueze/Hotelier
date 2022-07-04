@@ -1,44 +1,34 @@
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAppSelector, useAppDispatch } from "../app/hooks";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
 import TicketItem from "../components/TicketItem";
-import {
-  getTicket,
-  getTickets,
-  reset,
-  selectTicket,
-} from "../features/tickets/ticketSlice";
+import { useAllTickets } from "../queryState/tickets/ticketQuery";
 
 function Tickets() {
-  const { tickets, isError, isSuccess, isLoading, message } = useAppSelector(
-    selectTicket
-  );
-  const dispatch = useAppDispatch();
-
+  const results = useAllTickets()
+  
   useEffect(() => {
-    dispatch(getTickets());
-    if (isError) {
-      toast.error(message);
+    if (results.isError) {
+      toast.error(results.error.message);
     }
 
     return () => {
-      if (isSuccess) {
-        dispatch(reset());
+      if (results.isSuccess) {
       }
     };
-  }, [message, isError, isSuccess]);
+  }, [results.isError, results.isSuccess]);
 
-  if (isLoading) return <Spinner />;
+  if (results.isLoading) return <Spinner />;
+
+  // if(results.data) console.log(results.data)
 
   return (
     <div className="ticket-page">
       <BackButton url="/" />
       <h1 className="aln-cnt">Tickets</h1>
       <div className="tickets">
-        {tickets?.length ? (
+        {results.data?.length ? (
           <>
             <div className="ticket-headings">
               <div>Date</div>
@@ -46,7 +36,7 @@ function Tickets() {
               <div>Status</div>
               <div></div>
             </div>
-            {tickets.map((ticket) => (
+            { results.data && results.data.map((ticket) => (
               <TicketItem key={ticket.id} ticket={ticket} />
             ))}
           </>

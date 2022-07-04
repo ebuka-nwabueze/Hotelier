@@ -10,7 +10,6 @@ const Home = () => {
         </div>
       </section>
       <section>
-
       </section>
     </div>
   )

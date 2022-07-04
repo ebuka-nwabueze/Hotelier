@@ -1,9 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FullTicket } from "./../types/types"
 
-import { FullTicket } from "../features/tickets/ticketSlice";
-
-type Ticket = {
+type Ticket = { 
   ticket: FullTicket;
 };
 
