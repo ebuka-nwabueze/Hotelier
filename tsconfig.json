@@ -100,7 +100,8 @@
   },
   "ts-node": {
     "esm": true,
-    "experimentalSpecifierResolution": true
+    "experimentalSpecifierResolution": "node"
   },
-  "lib": ["esnext"]
+  "lib": ["esnext"],
+  "include": ["server/src"]
 }

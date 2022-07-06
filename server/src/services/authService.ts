@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import express from "express"
-import { JWT_TOKEN } from "../config";
+import { JWT_TOKEN } from "../config.js";
 
 type ReqObject = {
   request: any

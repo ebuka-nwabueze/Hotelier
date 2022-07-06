@@ -1,11 +1,11 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql"
-import { rootSchema } from "./graphql/schema";
-import { connectDB } from "./db/dbconfig";
-import "dotenv/config"
-import Auth from "./services/authService";
 import path from "path";
 import {fileURLToPath} from 'url';
+import { rootSchema } from "./graphql/schema.js";
+import { connectDB } from "./db/dbconfig.js";
+import "dotenv/config"
+import Auth from "./services/authService.js";
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -38,10 +38,10 @@ app.use(
 //serve react app during production.
 if (process.env.NODE_ENV === "production") {
   // set build folder as static
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static(path.join(__dirname, "../../client/build")));
 
   app.get("*", (req, res) =>
-    res.sendFile(path.join(__dirname, "../", "client", "build", "index.html"))
+    res.sendFile(path.join(__dirname, "../../", "client", "build", "index.html"))
   );
 } else {
   app.get("/", (req, res) => {
