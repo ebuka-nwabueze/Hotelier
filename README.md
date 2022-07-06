@@ -8,6 +8,7 @@ The application is developed using TypeScript for MERN Stack.
 
 Other info:
 - It uses graphql(express-graphql) as an API to connect the server.
+- React-query for the client side state management.
 - A potential addition is the use of Material UI and rsjs forms for the create and update features.
 
 ## How to run
