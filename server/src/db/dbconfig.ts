@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
-import Ticket from "../models/TicketModel"
 import "dotenv/config"
-import { DB_URI } from "../config";
+import { DB_URI } from "../config.js";
 
 export const connectDB = async () => {
   try {

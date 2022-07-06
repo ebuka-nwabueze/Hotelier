@@ -1,11 +1,11 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql"
-import { rootSchema } from "./graphql/schema";
-import { connectDB } from "./db/dbconfig";
-import "dotenv/config"
-import Auth from "./services/authService";
 import path from "path";
 import {fileURLToPath} from 'url';
+import { rootSchema } from "./graphql/schema.js";
+import { connectDB } from "./db/dbconfig.js";
+import "dotenv/config"
+import Auth from "./services/authService.js";
 
 
 const __filename = fileURLToPath(import.meta.url)

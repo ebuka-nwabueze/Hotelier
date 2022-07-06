@@ -8,9 +8,9 @@ import {
   GraphQLBoolean,
   GraphQLID,
 } from "graphql";
-import Ticket from "../models/TicketModel";
-import User, { IUser } from "../models/UserModel";
-import Auth from "../services/authService";
+import Ticket from "../models/TicketModel.js";
+import User, { IUser } from "../models/UserModel.js";
+import Auth from "../services/authService.js";
 
 
 

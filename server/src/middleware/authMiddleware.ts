@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import User from "../models/UserModel";
+import User from "../models/UserModel.js";
 import express from "express"
 import {JWT_TOKEN} from "../config"
 
