@@ -6,9 +6,12 @@
   "scripts": {
     "start": "node server/dist/server.js",
     "server": "nodemon server/src/server.ts",
+    "testrun": "node --experimental-specifier-resolution=node server/src/server.ts",
+    "runtest": "node --experimental-specifier-resolution=node --loader ts-node/esm  server/src/server.ts",
     "client": "npm start --prefix client",
     "build": "tsc -p .",
-    "dev": "concurrently \"nodemon server/src/server.ts\" \"npm run client\""
+    "dev": "concurrently \"nodemon server/src/server.ts\" \"npm run client\"",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm run build "
   },
   "keywords": [],
   "author": "",
@@ -31,5 +34,6 @@
     "nodemon": "^2.0.16",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
-  }
+  }, 
+  "type": "module"
 }

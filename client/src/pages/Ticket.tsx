@@ -24,7 +24,7 @@ function Ticket() {
   }
 
 
-  useEffect(() => {
+  useEffect(() => { 
 
     if (deleteMutation.isError) {
       toast.error(deleteMutation.error.message);
