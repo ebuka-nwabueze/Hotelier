@@ -12,7 +12,8 @@
     "build": "tsc -p .",
     "dev": "concurrently \"nodemon server/src/server.ts\" \"npm run client\"",
     "devmain": "concurrently \"npm run runtest\" \"npm run client\"",
-    "heroku-postbuild": "cd client && npm install --only=dev && npm run build "
+    "heroku-postbuild": "cd client && npm install --only=dev && npm run build ",
+    "postinstall": "tsc -p ."
   },
   "keywords": [],
   "author": "",
