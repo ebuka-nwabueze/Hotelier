@@ -111,9 +111,9 @@ button:hover {
 }
 
 .top-section{
-  height:850px;
-  background-color: var(--app-gray-02);
-  color: white;
+  height:550px;
+  /* background-color: var(--app-gray-02); */
+  color: var(--app-gray-01);
   display: flex;
   flex-direction: column;
   gap: 20px;
