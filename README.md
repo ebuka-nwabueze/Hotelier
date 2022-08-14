@@ -23,6 +23,9 @@ Firstly, create a `.env` file and set these environmental variables `DB_URI`, `J
 ```
 python3 -c 'import base64; import os; print(base64.encodebytes(os.urandom(32)))'
 ```
+Secondly, install tthe depeendencies.
+- In the root direcory,  run ``` npm install ``` for the server dependencies.
+- Change directory to client. run  ``` npm install ``` for the client dependencies.
 
 In the local directory, you can run:
 
