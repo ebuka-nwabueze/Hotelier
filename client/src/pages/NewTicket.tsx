@@ -27,6 +27,7 @@ function NewTicket() {
       toast.success("Ticket created successfully");
       navigate("/tickets");
     }
+    // eslint-disable-next-line
   }, [mutation.isError, mutation.isSuccess]);
 
   type EventType =

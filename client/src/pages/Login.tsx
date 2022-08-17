@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import {} from "react-router";
 import { useLoginUser } from "../queryState/auth/authQuery";
 
 export interface FormData {
@@ -28,6 +26,7 @@ function Login() {
     if(mutation.isError){
       toast.error(mutation.error.message)
     }
+    // eslint-disable-next-line
   }, [mutation.isSuccess, mutation.isError]);
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

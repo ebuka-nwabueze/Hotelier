@@ -52,7 +52,7 @@ body {
 .header {
   background-color: white;
   box-shadow: 10px 0px 5px var(--app-gray-01);
-  min-height: max-content;
+  /* min-height: max-content; */
 }
 
 .navbar {

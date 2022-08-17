@@ -17,6 +17,7 @@ function Tickets() {
       if (results.isSuccess) {
       }
     };
+    // eslint-disable-next-line
   }, [results.isError, results.isSuccess]);
 
   if (results.isLoading) return <Spinner />;

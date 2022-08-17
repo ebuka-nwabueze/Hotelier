@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import  { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "react-query";
 import { UserResponseData } from "../types/types";
-import { getUserData } from "../userStorage";
 
 type User = UserResponseData | null;
 

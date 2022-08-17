@@ -49,13 +49,13 @@ const Header = () => {
             <ul className="right-nav-control">
               {user ? (
                 <>
-                  <li>
+                  <li test-id="tickets-link">
                     <Link to="/tickets">Tickets</Link>
                   </li>
-                  <li>
+                  <li test-id="new-ticket-link">
                     <Link to="/new-ticket">New Ticket</Link>
                   </li>
-                  <li>
+                  <li test-id="logout-link">
                     <button className="mybutton" onClick={onLogout}>
                       Logout
                     </button>
