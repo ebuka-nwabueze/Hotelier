@@ -9,7 +9,7 @@ describe('Login and register a user', () => {
   const description = "This is a duplicate for us to check our tasks, please help"
 
   it("register a user",  () => {
-    cy.visit('http://localhost:3000/register')
+    cy.visit('/register')
     cy.findByRole('textbox', {  name: /name:/i}).type(`${name}`)
     cy.findByRole('textbox', {  name: /email:/i}).type(`${username}`)
     cy.findByPlaceholderText(/enter your password/i).type(`${password}`)
@@ -18,7 +18,7 @@ describe('Login and register a user', () => {
   })
 
   it('login to page', () => {
-    cy.visit('http://localhost:3000/login')
+    cy.visit('/login')
     cy.findByRole('textbox', {  name: /email:/i}).type(`${username}`)
     cy.findByLabelText(/password:/i).type(`${password}`)
     cy.findByRole('button', {  name: /login/i}).click();
@@ -53,7 +53,7 @@ describe("View , update and delete Ticket", () => {
     cy.findByRole('button', {  name: /update/i}).click()
     cy.findByText(newDescription).should("be.visible")
   })
-  
+
   it("Delete ticket", () => {
     cy.findByRole('button', {  name: /delete/i}).click()
   })
