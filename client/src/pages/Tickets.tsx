@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import BackButton from "../components/BackButton";
+import BackButton from "../components/BackButton"; 
 import Spinner from "../components/Spinner";
 import TicketItem from "../components/TicketItem";
 import {
@@ -13,7 +13,7 @@ import {
 } from "../features/tickets/ticketSlice";
 
 function Tickets() {
-  const { tickets, isError, isSuccess, isLoading, message } = useAppSelector(
+  const { tickets, isError, isSuccess, isLoading , message} = useAppSelector(
     selectTicket
   );
   const dispatch = useAppDispatch();

@@ -47,7 +47,7 @@ function NewTicket() {
   type EventType =
     | React.ChangeEvent<HTMLInputElement>
     | React.ChangeEvent<HTMLSelectElement>
-    | React.ChangeEvent<HTMLTextAreaElement>;
+    | React.ChangeEvent<HTMLTextAreaElement>; 
 
   const inputChange = (e: EventType) => {
     setformData((prev) => ({ ...prev, [e.target.id]: e.target.value }));

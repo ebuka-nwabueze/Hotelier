@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 function Ticket() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const {
+  const { 
     tickets,
     ticket,
     isError,

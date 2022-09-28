@@ -141,7 +141,7 @@ export const getTicket = createAsyncThunk(
       } else {
         console.log("unexpected error: ", error);
         message = "An unexpected error occurred";
-      }
+      } 
       return thunkAPI.rejectWithValue(message);
     }
   }

@@ -17,7 +17,7 @@ interface NewTicketResponseData {
   id: string;
   user: string; 
   description: string;
-  category: string
+  category: string 
 }
 
 interface FullTicketResponseData extends NewTicketResponseData {
